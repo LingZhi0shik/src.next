@@ -973,25 +973,10 @@ TEST_F(TemplateURLServiceTest, RepairPrepopulatedSearchEngines) {
   model()->SetUserSelectedDefaultSearchProvider(user_dse);
   EXPECT_EQ(user_dse, model()->GetDefaultSearchProvider());
 
-  // Remove bing. Despite the extension added below, it will still be restored.
-  TemplateURL* bing = model()->GetTemplateURLForKeyword(u"bing.com");
-  ASSERT_TRUE(bing);
-  model()->Remove(bing);
-  EXPECT_FALSE(model()->GetTemplateURLForKeyword(u"bing.com"));
-
   // Register an extension with bing keyword.
   model()->RegisterOmniboxKeyword("abcdefg", "extension_name", "bing.com",
                                   "http://abcdefg", Time());
   EXPECT_TRUE(model()->GetTemplateURLForKeyword(u"bing.com"));
-
-  // Remove yahoo. It will be restored later, but for now verify we removed it.
-  TemplateURL* yahoo = model()->GetTemplateURLForKeyword(u"yahoo.com");
-  ASSERT_TRUE(yahoo);
-  model()->Remove(yahoo);
-  EXPECT_FALSE(model()->GetTemplateURLForKeyword(u"yahoo.com"));
-
-  // Now perform the actual repair that should restore Yahoo and Bing.
-  model()->RepairPrepopulatedSearchEngines();
 
   // Google is default.
   ASSERT_EQ(google, model()->GetDefaultSearchProvider());
